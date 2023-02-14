@@ -25,13 +25,25 @@ const shopReducer = createSlice({
 
         },
         deleteCartItem: (state, action) => {
-            console.log(action.payload)
-            state.cart = state.cart.filter(item=>item.id!==action.payload)
+            state.cart = state.cart.filter(item => item.id !== action.payload)
+        },
+        changeQuantity: (state, action) => {
+            const { quantity, id } = action.payload;
+            const cartItem = state.cart.find(item => item.id === id);
+            if (cartItem) {
+                cartItem.quantity += quantity;
+                // if (cartItem.quantity < 1) cartItem.quantity = 1
+                if (cartItem.quantity < 1)
+                    if (window.confirm('Do you want to delete ?')) {
+                        state.cart = state.cart.filter(item => item.id !== id)
+                    } else cartItem.quantity = 1
+           
+            }
         }
     }
 });
 
-export const { getProductListAction, addToCart,deleteCartItem } = shopReducer.actions
+export const { getProductListAction, addToCart, deleteCartItem, changeQuantity } = shopReducer.actions
 
 export default shopReducer.reducer
 

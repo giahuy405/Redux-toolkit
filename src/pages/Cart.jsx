@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteCartItem } from '../redux/reducers/shopReducer';
+import { deleteCartItem, changeQuantity } from '../redux/reducers/shopReducer';
 const Cart = () => {
   const { cart } = useSelector(state => state.shopReducer);
   const dispatch = useDispatch();
+  const [inputA, setInputA] = useState({ myInput: '' });
   return (
     <div>
+      <input type="text" onChange={(event) => setInputA({ ...inputA, myInput: event.target.value })} />
 
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -44,8 +46,30 @@ const Cart = () => {
                   {item.price}
                 </td>
                 <td className="px-6 py-4">
-                  
+
+                  <button
+                    onClick={() => {
+                      const itemCart = {
+                        quantity: -1,
+                        id: item.id
+                      }
+                      dispatch(
+                        changeQuantity(itemCart)
+                      )
+                    }}
+                    type="button" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2 px-4 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">-</button>
                   {item.quantity}
+                  <button
+                    onClick={() => {
+                      const itemCart = {
+                        quantity: 1,
+                        id: item.id
+                      }
+                      dispatch(
+                        changeQuantity(itemCart)
+                      )
+                    }}
+                    type="button" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2 px-4 ml-2 text-center mr-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">+</button>
                 </td>
                 <td className="px-6 py-4">
                   {(item.price * item.quantity).toLocaleString()}
@@ -73,3 +97,5 @@ const Cart = () => {
 }
 
 export default Cart
+
+
